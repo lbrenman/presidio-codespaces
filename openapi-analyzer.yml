@@ -27,6 +27,7 @@ paths:
 
   /health:
     get:
+      operationId: getHealth
       tags: [Analysis]
       summary: Health check
       description: Returns the health status of the Analyzer service.
@@ -41,6 +42,7 @@ paths:
 
   /analyze:
     post:
+      operationId: analyzeText
       tags: [Analysis]
       summary: Analyze text for PII
       description: >
@@ -103,6 +105,7 @@ paths:
 
   /recognizers:
     get:
+      operationId: listRecognizers
       tags: [Recognizers]
       summary: List all recognizers
       description: Returns all recognizers currently loaded in the registry.
@@ -126,6 +129,7 @@ paths:
 
   /supportedentities:
     get:
+      operationId: listSupportedEntities
       tags: [Recognizers]
       summary: List supported entity types
       description: Returns all PII entity types that can be detected.
@@ -192,7 +196,7 @@ components:
           type: number
           format: float
           description: >
-            Minimum confidence score (0.0–1.0) for a detection to be returned.
+            Minimum confidence score (0.0-1.0) for a detection to be returned.
             Defaults to 0.35.
           example: 0.5
         return_decision_process:
@@ -209,8 +213,7 @@ components:
             $ref: '#/components/schemas/AdHocRecognizer'
         context:
           type: array
-          description: >
-            Additional context words to improve detection confidence.
+          description: Additional context words to improve detection confidence.
           items:
             type: string
         allow_list:

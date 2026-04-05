@@ -27,6 +27,7 @@ paths:
 
   /health:
     get:
+      operationId: getHealth
       tags: [Anonymization]
       summary: Health check
       description: Returns the health status of the Anonymizer service.
@@ -41,6 +42,7 @@ paths:
 
   /anonymize:
     post:
+      operationId: anonymizeText
       tags: [Anonymization]
       summary: Anonymize PII in text
       description: >
@@ -156,6 +158,7 @@ paths:
 
   /deanonymize:
     post:
+      operationId: deanonymizeText
       tags: [Anonymization]
       summary: De-anonymize text
       description: >
@@ -195,6 +198,7 @@ paths:
 
   /anonymizers:
     get:
+      operationId: listAnonymizers
       tags: [Operators]
       summary: List supported anonymizer operators
       description: Returns all anonymization operator types supported by the service.
@@ -217,6 +221,7 @@ paths:
 
   /deanonymizers:
     get:
+      operationId: listDeanonymizers
       tags: [Operators]
       summary: List supported de-anonymizer operators
       description: Returns all de-anonymization operator types supported by the service.
@@ -309,12 +314,6 @@ components:
             (encrypt/decrypt operator) AES encryption key. Must be 128, 192,
             or 256 bits (16, 24, or 32 characters).
           example: "WmZq4t7w!z%C&F)J"
-        lambda:
-          type: string
-          description: >
-            (custom operator) A Python lambda expression as a string, applied
-            to the detected entity text.
-          example: "lambda x: x[:2] + '***'"
 
     AnalyzerResult:
       type: object
