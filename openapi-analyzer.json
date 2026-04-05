@@ -1,0 +1,274 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Presidio Analyzer API",
+    "description": "Detects PII entities in text using Named Entity Recognition, regular expressions, rule-based logic, and checksums. Part of the Microsoft Presidio framework.",
+    "version": "2.x",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    },
+    "contact": {
+      "name": "Microsoft Presidio",
+      "url": "https://github.com/microsoft/presidio"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5002",
+      "description": "Local / Codespaces"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Analysis",
+      "description": "Detect PII entities in text"
+    },
+    {
+      "name": "Recognizers",
+      "description": "Manage and query PII recognizers"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": ["Analysis"],
+        "summary": "Health check",
+        "description": "Returns the health status of the Analyzer service.",
+        "operationId": "getHealth",
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "ok"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analyze": {
+      "post": {
+        "tags": ["Analysis"],
+        "summary": "Analyze text for PII",
+        "description": "Recognizes PII entities in a given text and returns their types, locations, and confidence scores.",
+        "operationId": "analyzeText",
+        "requestBody": {
+          "description": "Text analysis request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyzeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "List of detected PII entities",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RecognizerResult"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/recognizers": {
+      "get": {
+        "tags": ["Recognizers"],
+        "summary": "List all recognizers",
+        "description": "Returns all recognizers currently loaded in the registry.",
+        "operationId": "listRecognizers",
+        "parameters": [
+          {
+            "name": "language",
+            "in": "query",
+            "description": "Filter recognizers by language code (e.g. en)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of recognizers",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RecognizerInfo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/supportedentities": {
+      "get": {
+        "tags": ["Recognizers"],
+        "summary": "List supported entity types",
+        "description": "Returns all PII entity types that can be detected.",
+        "operationId": "listSupportedEntities",
+        "parameters": [
+          {
+            "name": "language",
+            "in": "query",
+            "description": "Filter by language code (e.g. en)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "en"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of supported entity type names",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "example": ["PERSON", "EMAIL_ADDRESS", "PHONE_NUMBER", "US_SSN", "CREDIT_CARD", "IBAN_CODE", "IP_ADDRESS", "LOCATION", "DATE_TIME", "US_DRIVER_LICENSE", "US_PASSPORT", "CRYPTO"]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnalyzeRequest": {
+        "type": "object",
+        "required": ["text", "language"],
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "The text to analyze for PII entities.",
+            "example": "Hi, I'm John Smith. My email is john@example.com."
+          },
+          "language": {
+            "type": "string",
+            "description": "Two-letter language code (e.g. en, de, es).",
+            "example": "en"
+          },
+          "entities": {
+            "type": "array",
+            "description": "Restrict analysis to these entity types only. If omitted, all supported entity types are checked.",
+            "items": {
+              "type": "string"
+            },
+            "example": ["PERSON", "EMAIL_ADDRESS"]
+          },
+          "score_threshold": {
+            "type": "number",
+            "format": "float",
+            "description": "Minimum confidence score (0.0-1.0) for a detection to be returned. Defaults to 0.35.",
+            "example": 0.5
+          },
+          "return_decision_process": {
+            "type": "boolean",
+            "description": "If true, includes analysis explanation for each detected entity.",
+            "default": false
+          },
+          "allow_list": {
+            "type": "array",
+            "description": "List of strings to exclude from detection.",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "RecognizerResult": {
+        "type": "object",
+        "properties": {
+          "entity_type": {
+            "type": "string",
+            "description": "The type of PII entity detected.",
+            "example": "EMAIL_ADDRESS"
+          },
+          "start": {
+            "type": "integer",
+            "description": "Start character index of the entity in the original text.",
+            "example": 31
+          },
+          "end": {
+            "type": "integer",
+            "description": "End character index of the entity in the original text.",
+            "example": 47
+          },
+          "score": {
+            "type": "number",
+            "format": "float",
+            "description": "Confidence score between 0.0 and 1.0.",
+            "example": 1.0
+          }
+        }
+      },
+      "RecognizerInfo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "SpacyRecognizer"
+          },
+          "supported_entities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["PERSON", "LOCATION"]
+          },
+          "supported_languages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["en"]
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "Invalid request: 'language' is required"
+          }
+        }
+      }
+    }
+  }
+}

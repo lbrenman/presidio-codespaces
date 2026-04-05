@@ -10,9 +10,9 @@ Three separate specs are included in this repo — one per service:
 
 | Service | Port | Spec | Swagger Editor |
 |---|---|---|---|
-| **Presidio Analyzer** | `5002` | [openapi-analyzer.yml](./openapi-analyzer.yml) | [Open in Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/lbrenman/presidio-codespaces/main/openapi-analyzer.yml) |
-| **Presidio Anonymizer** | `5001` | [openapi-anonymizer.yml](./openapi-anonymizer.yml) | [Open in Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/lbrenman/presidio-codespaces/main/openapi-anonymizer.yml) |
-| **Presidio Image Redactor** | `5003` | [openapi-image-redactor.yml](./openapi-image-redactor.yml) | [Open in Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/lbrenman/presidio-codespaces/main/openapi-image-redactor.yml) |
+| **Presidio Analyzer** | `5002` | [openapi-analyzer.json](./openapi-analyzer.json) | [Open in Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/lbrenman/presidio-codespaces/main/openapi-analyzer.json) |
+| **Presidio Anonymizer** | `5001` | [openapi-anonymizer.json](./openapi-anonymizer.json) | [Open in Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/lbrenman/presidio-codespaces/main/openapi-anonymizer.json) |
+| **Presidio Image Redactor** | `5003` | [openapi-image-redactor.json](./openapi-image-redactor.json) | [Open in Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/lbrenman/presidio-codespaces/main/openapi-image-redactor.json) |
 
 > The upstream combined spec (text services only) is also available via [Microsoft's ReDoc UI](https://microsoft.github.io/presidio/api-docs/api-docs.html).
 
@@ -169,8 +169,8 @@ docker compose up -d
 - [Presidio Documentation](https://microsoft.github.io/presidio)
 - [Presidio Docker Installation](https://microsoft.github.io/presidio/installation/#using-docker)
 - [Presidio REST API Reference (ReDoc)](https://microsoft.github.io/presidio/api-docs/api-docs.html)
-- [Analyzer OpenAPI Spec](./openapi-analyzer.yml)
-- [Anonymizer OpenAPI Spec](./openapi-anonymizer.yml)
-- [Image Redactor OpenAPI Spec](./openapi-image-redactor.yml)
+- [Analyzer OpenAPI Spec](./openapi-analyzer.json)
+- [Anonymizer OpenAPI Spec](./openapi-anonymizer.json)
+- [Image Redactor OpenAPI Spec](./openapi-image-redactor.json)
 - [Presidio Image Redactor Documentation](https://microsoft.github.io/presidio/image-redactor/)
 - [Supported Entities](https://microsoft.github.io/presidio/supported_entities/)
