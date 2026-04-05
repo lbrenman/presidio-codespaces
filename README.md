@@ -4,13 +4,16 @@ Run [Microsoft Presidio](https://github.com/microsoft/presidio) as a REST API in
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/lbrenman/presidio-codespaces)
 
-### 📄 OpenAPI Specification
+### 📄 OpenAPI Specifications
 
-| Format | Link |
-|---|---|
-| **ReDoc UI** | [View API Docs](https://microsoft.github.io/presidio/api-docs/api-docs.html) |
-| **Swagger Editor** | [Open in Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/microsoft/presidio/main/docs/api-docs/api-docs.yml) |
-| **Raw YAML** | [api-docs.yml](https://raw.githubusercontent.com/microsoft/presidio/main/docs/api-docs/api-docs.yml) |
+Two separate specs are included in this repo — one per service:
+
+| Service | Port | Spec | Swagger Editor |
+|---|---|---|---|
+| **Presidio Analyzer** | `5002` | [openapi-analyzer.yml](./openapi-analyzer.yml) | [Open in Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/lbrenman/presidio-codespaces/main/openapi-analyzer.yml) |
+| **Presidio Anonymizer** | `5001` | [openapi-anonymizer.yml](./openapi-anonymizer.yml) | [Open in Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/lbrenman/presidio-codespaces/main/openapi-anonymizer.yml) |
+
+> The upstream combined spec is also available via [Microsoft's ReDoc UI](https://microsoft.github.io/presidio/api-docs/api-docs.html).
 
 ---
 
@@ -153,5 +156,7 @@ docker compose up -d
 - [Presidio GitHub](https://github.com/microsoft/presidio)
 - [Presidio Documentation](https://microsoft.github.io/presidio)
 - [Presidio Docker Installation](https://microsoft.github.io/presidio/installation/#using-docker)
-- [Presidio REST API Reference](https://microsoft.github.io/presidio/api-docs/api-docs.html)
+- [Presidio REST API Reference (ReDoc)](https://microsoft.github.io/presidio/api-docs/api-docs.html)
+- [Analyzer OpenAPI Spec](./openapi-analyzer.yml)
+- [Anonymizer OpenAPI Spec](./openapi-anonymizer.yml)
 - [Supported Entities](https://microsoft.github.io/presidio/supported_entities/)
