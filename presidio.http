@@ -120,3 +120,95 @@ Content-Type: application/json
 
 ### List supported anonymizers
 GET {{anonymizerUrl}}/anonymizers
+
+
+### ─── Image Redactor ──────────────────────────────────────────
+
+### Health check - Image Redactor
+GET {{imageRedactorUrl}}/health
+
+###
+
+### Redact PII from image - black fill (default)
+# Saves response as redacted.png
+POST {{imageRedactorUrl}}/redact
+Content-Type: multipart/form-data; boundary=----Boundary
+
+------Boundary
+Content-Disposition: form-data; name="image"; filename="photo.png"
+Content-Type: image/png
+
+< ./samples/photo.png
+------Boundary
+Content-Disposition: form-data; name="data"
+
+{"color_fill": 0}
+------Boundary--
+
+###
+
+### Redact PII from image - pink fill, score threshold 0.5
+POST {{imageRedactorUrl}}/redact
+Content-Type: multipart/form-data; boundary=----Boundary
+
+------Boundary
+Content-Disposition: form-data; name="image"; filename="photo.png"
+Content-Type: image/png
+
+< ./samples/photo.png
+------Boundary
+Content-Disposition: form-data; name="data"
+
+{"color_fill": [255, 192, 203], "score_threshold": 0.5}
+------Boundary--
+
+###
+
+### Redact specific entity types only from image
+POST {{imageRedactorUrl}}/redact
+Content-Type: multipart/form-data; boundary=----Boundary
+
+------Boundary
+Content-Disposition: form-data; name="image"; filename="photo.png"
+Content-Type: image/png
+
+< ./samples/photo.png
+------Boundary
+Content-Disposition: form-data; name="data"
+
+{"color_fill": 0, "entities": ["PERSON", "EMAIL_ADDRESS", "US_SSN"]}
+------Boundary--
+
+###
+
+### Redact PII from DICOM file - contrast fill
+POST {{imageRedactorUrl}}/redact-file
+Content-Type: multipart/form-data; boundary=----Boundary
+
+------Boundary
+Content-Disposition: form-data; name="file"; filename="scan.dcm"
+Content-Type: application/octet-stream
+
+< ./samples/scan.dcm
+------Boundary
+Content-Disposition: form-data; name="data"
+
+{"fill": "contrast", "padding_width": 25}
+------Boundary--
+
+###
+
+### Redact PII from DICOM file - background fill
+POST {{imageRedactorUrl}}/redact-file
+Content-Type: multipart/form-data; boundary=----Boundary
+
+------Boundary
+Content-Disposition: form-data; name="file"; filename="scan.dcm"
+Content-Type: application/octet-stream
+
+< ./samples/scan.dcm
+------Boundary
+Content-Disposition: form-data; name="data"
+
+{"fill": "background", "padding_width": 30}
+------Boundary--

@@ -112,6 +112,10 @@ Samples include:
 - Anonymize with **mask** (e.g. `****1120`)
 - Anonymize with **hash** (SHA-256)
 - List all supported recognizers and entity types
+- Redact PII from `samples/photo.png` (standard image with fake PII text)
+- Redact PII from `samples/scan.dcm` (synthetic DICOM with fake PHI burned into pixels)
+
+The `samples/` folder contains pre-built test files so the image redactor requests work out of the box.
 
 ---
 
