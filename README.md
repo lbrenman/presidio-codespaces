@@ -6,14 +6,15 @@ Run [Microsoft Presidio](https://github.com/microsoft/presidio) as a REST API in
 
 ### 📄 OpenAPI Specifications
 
-Two separate specs are included in this repo — one per service:
+Three separate specs are included in this repo — one per service:
 
 | Service | Port | Spec | Swagger Editor |
 |---|---|---|---|
 | **Presidio Analyzer** | `5002` | [openapi-analyzer.yml](./openapi-analyzer.yml) | [Open in Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/lbrenman/presidio-codespaces/main/openapi-analyzer.yml) |
 | **Presidio Anonymizer** | `5001` | [openapi-anonymizer.yml](./openapi-anonymizer.yml) | [Open in Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/lbrenman/presidio-codespaces/main/openapi-anonymizer.yml) |
+| **Presidio Image Redactor** | `5003` | [openapi-image-redactor.yml](./openapi-image-redactor.yml) | [Open in Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/lbrenman/presidio-codespaces/main/openapi-image-redactor.yml) |
 
-> The upstream combined spec is also available via [Microsoft's ReDoc UI](https://microsoft.github.io/presidio/api-docs/api-docs.html).
+> The upstream combined spec (text services only) is also available via [Microsoft's ReDoc UI](https://microsoft.github.io/presidio/api-docs/api-docs.html).
 
 ---
 
@@ -25,6 +26,7 @@ Presidio is an open-source PII (Personally Identifiable Information) detection a
 |---|---|---|
 | **presidio-analyzer** | `5002` | Detect PII entities in text (names, emails, SSNs, phones, credit cards, etc.) |
 | **presidio-anonymizer** | `5001` | Anonymize/redact detected PII (replace, mask, hash, encrypt, or redact) |
+| **presidio-image-redactor** | `5003` | Detect and redact PII in images using OCR (PNG, JPEG, BMP, TIFF, DICOM) |
 
 ---
 
@@ -38,9 +40,9 @@ The devcontainer will automatically:
 - Pull the official `mcr.microsoft.com/presidio-analyzer` and `mcr.microsoft.com/presidio-anonymizer` Docker images
 - Start both services via Docker Compose
 - Wait for health checks to pass and print a ready message
-- Forward ports `5002` (analyzer) and `5001` (anonymizer) to your browser
+- Forward ports `5002` (analyzer), `5001` (anonymizer), and `5003` (image redactor) to your browser
 
-> ⚠️ **Note:** The analyzer image is large (~2 GB) and includes spaCy NLP models. First startup takes **2–5 minutes**. Subsequent starts are much faster.
+> ⚠️ **Note:** The analyzer and image redactor images are large (~2 GB each) and include spaCy NLP models. First startup takes **3–6 minutes**. Subsequent starts are much faster.
 
 ### 2. Verify the services are running
 
@@ -133,9 +135,15 @@ Samples include:
 | `GET` | `/anonymizers` | List supported anonymizer operators |
 | `GET` | `/deanonymize` | Reverse anonymization (for encrypt/decrypt) |
 
----
+### Image Redactor (`http://localhost:5003`)
 
-## Supported PII Entity Types (partial list)
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/health` | Health check |
+| `POST` | `/redact` | Redact PII from a standard image (PNG, JPEG, BMP, TIFF) — returns redacted image |
+| `POST` | `/redact-file` | Redact PII pixel data from a DICOM medical image — returns redacted DICOM file |
+
+
 
 `PERSON`, `EMAIL_ADDRESS`, `PHONE_NUMBER`, `US_SSN`, `CREDIT_CARD`, `IBAN_CODE`, `IP_ADDRESS`, `LOCATION`, `DATE_TIME`, `NRP`, `US_DRIVER_LICENSE`, `US_PASSPORT`, `US_BANK_NUMBER`, `CRYPTO`, `MEDICAL_LICENSE`, and [many more](https://microsoft.github.io/presidio/supported_entities/).
 
@@ -159,4 +167,6 @@ docker compose up -d
 - [Presidio REST API Reference (ReDoc)](https://microsoft.github.io/presidio/api-docs/api-docs.html)
 - [Analyzer OpenAPI Spec](./openapi-analyzer.yml)
 - [Anonymizer OpenAPI Spec](./openapi-anonymizer.yml)
+- [Image Redactor OpenAPI Spec](./openapi-image-redactor.yml)
+- [Presidio Image Redactor Documentation](https://microsoft.github.io/presidio/image-redactor/)
 - [Supported Entities](https://microsoft.github.io/presidio/supported_entities/)

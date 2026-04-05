@@ -3,7 +3,7 @@
 
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
 
-  "forwardPorts": [5001, 5002],
+  "forwardPorts": [5001, 5002, 5003],
   "portsAttributes": {
     "5002": {
       "label": "Presidio Analyzer API",
@@ -11,6 +11,10 @@
     },
     "5001": {
       "label": "Presidio Anonymizer API",
+      "onAutoForward": "notify"
+    },
+    "5003": {
+      "label": "Presidio Image Redactor API",
       "onAutoForward": "notify"
     }
   },
@@ -30,7 +34,8 @@
         "rest-client.environmentVariables": {
           "$shared": {
             "analyzerUrl": "http://localhost:5002",
-            "anonymizerUrl": "http://localhost:5001"
+            "anonymizerUrl": "http://localhost:5001",
+            "imageRedactorUrl": "http://localhost:5003"
           }
         }
       }

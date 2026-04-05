@@ -33,15 +33,17 @@ wait_for_service() {
   return 1
 }
 
-wait_for_service "Presidio Anonymizer" "http://localhost:5001"
-wait_for_service "Presidio Analyzer"   "http://localhost:5002"
+wait_for_service "Presidio Anonymizer"      "http://localhost:5001"
+wait_for_service "Presidio Analyzer"        "http://localhost:5002"
+wait_for_service "Presidio Image Redactor"  "http://localhost:5003"
 
 echo ""
 echo "============================================="
 echo "  Presidio is ready! 🎉"
 echo ""
-echo "  Analyzer  → http://localhost:5002"
-echo "  Anonymizer → http://localhost:5001"
+echo "  Analyzer      → http://localhost:5002"
+echo "  Anonymizer    → http://localhost:5001"
+echo "  Image Redactor → http://localhost:5003"
 echo ""
 echo "  Run 'bash test.sh' to verify the APIs."
 echo "============================================="
