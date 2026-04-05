@@ -20,14 +20,8 @@
     }
   ],
   "tags": [
-    {
-      "name": "Anonymization",
-      "description": "Anonymize and de-anonymize PII in text"
-    },
-    {
-      "name": "Operators",
-      "description": "Query supported anonymization operators"
-    }
+    { "name": "Anonymization", "description": "Anonymize and de-anonymize PII in text" },
+    { "name": "Operators", "description": "Query supported anonymization operators" }
   ],
   "paths": {
     "/health": {
@@ -41,10 +35,7 @@
             "description": "Service is healthy",
             "content": {
               "text/plain": {
-                "schema": {
-                  "type": "string",
-                  "example": "ok"
-                }
+                "schema": { "type": "string", "example": "ok" }
               }
             }
           }
@@ -62,9 +53,7 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AnonymizeRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/AnonymizeRequest" }
             }
           }
         },
@@ -73,22 +62,11 @@
             "description": "Anonymized text with details of each operation",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AnonymizeResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/AnonymizeResponse" }
               }
             }
           },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
+          "400": { "description": "Bad request" }
         }
       }
     },
@@ -96,16 +74,14 @@
       "post": {
         "tags": ["Anonymization"],
         "summary": "De-anonymize text",
-        "description": "Reverses anonymization for entities that were anonymized using the encrypt operator. Requires the same encryption key used during anonymization.",
+        "description": "Reverses anonymization for entities anonymized using the encrypt operator. Requires the same encryption key used during anonymization.",
         "operationId": "deanonymizeText",
         "requestBody": {
           "description": "Text de-anonymization request",
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeanonymizeRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/DeanonymizeRequest" }
             }
           }
         },
@@ -114,22 +90,11 @@
             "description": "De-anonymized text",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AnonymizeResponse"
-                }
+                "schema": { "$ref": "#/components/schemas/AnonymizeResponse" }
               }
             }
           },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
+          "400": { "description": "Bad request" }
         }
       }
     },
@@ -144,13 +109,7 @@
             "description": "List of supported operator names",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "example": ["replace", "redact", "hash", "mask", "encrypt", "custom"]
-                }
+                "schema": { "$ref": "#/components/schemas/OperatorList" }
               }
             }
           }
@@ -168,13 +127,7 @@
             "description": "List of supported de-anonymizer operator names",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "example": ["decrypt"]
-                }
+                "schema": { "$ref": "#/components/schemas/OperatorList" }
               }
             }
           }
@@ -196,16 +149,30 @@
           "anonymizers": {
             "type": "object",
             "description": "Map of entity type (or DEFAULT) to anonymizer operator config.",
-            "additionalProperties": {
-              "$ref": "#/components/schemas/AnonymizerConfig"
-            }
+            "additionalProperties": { "$ref": "#/components/schemas/AnonymizerConfig" }
           },
           "analyzer_results": {
             "type": "array",
-            "description": "List of PII detections returned by the Presidio Analyzer /analyze endpoint.",
-            "items": {
-              "$ref": "#/components/schemas/AnalyzerResult"
-            }
+            "description": "List of PII detections from the Presidio Analyzer /analyze endpoint.",
+            "items": { "$ref": "#/components/schemas/AnalyzerResult" }
+          }
+        }
+      },
+      "DeanonymizeRequest": {
+        "type": "object",
+        "required": ["text", "anonymizer_results"],
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "The anonymized text to de-anonymize."
+          },
+          "deanonymizers": {
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/AnonymizerConfig" }
+          },
+          "anonymizer_results": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/AnonymizeResultItem" }
           }
         }
       },
@@ -290,67 +257,25 @@
           "items": {
             "type": "array",
             "description": "Details of each anonymization operation performed.",
-            "items": {
-              "$ref": "#/components/schemas/AnonymizeResultItem"
-            }
+            "items": { "$ref": "#/components/schemas/AnonymizeResultItem" }
           }
         }
       },
       "AnonymizeResultItem": {
         "type": "object",
         "properties": {
-          "operator": {
-            "type": "string",
-            "example": "replace"
-          },
-          "entity_type": {
-            "type": "string",
-            "example": "PERSON"
-          },
-          "start": {
-            "type": "integer",
-            "example": 8
-          },
-          "end": {
-            "type": "integer",
-            "example": 15
-          },
-          "text": {
-            "type": "string",
-            "example": "<PERSON>"
-          }
+          "operator": { "type": "string", "example": "replace" },
+          "entity_type": { "type": "string", "example": "PERSON" },
+          "start": { "type": "integer", "example": 8 },
+          "end": { "type": "integer", "example": 15 },
+          "text": { "type": "string", "example": "<PERSON>" }
         }
       },
-      "DeanonymizeRequest": {
-        "type": "object",
-        "required": ["text", "anonymizer_results"],
-        "properties": {
-          "text": {
-            "type": "string",
-            "description": "The anonymized text to de-anonymize."
-          },
-          "deanonymizers": {
-            "type": "object",
-            "additionalProperties": {
-              "$ref": "#/components/schemas/AnonymizerConfig"
-            }
-          },
-          "anonymizer_results": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AnonymizeResultItem"
-            }
-          }
-        }
-      },
-      "Error": {
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "string",
-            "example": "Invalid request body"
-          }
-        }
+      "OperatorList": {
+        "type": "array",
+        "description": "List of supported operator names.",
+        "items": { "type": "string" },
+        "example": ["replace", "redact", "hash", "mask", "encrypt", "custom"]
       }
     }
   }

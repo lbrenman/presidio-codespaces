@@ -20,14 +20,8 @@
     }
   ],
   "tags": [
-    {
-      "name": "Analysis",
-      "description": "Detect PII entities in text"
-    },
-    {
-      "name": "Recognizers",
-      "description": "Manage and query PII recognizers"
-    }
+    { "name": "Analysis", "description": "Detect PII entities in text" },
+    { "name": "Recognizers", "description": "Manage and query PII recognizers" }
   ],
   "paths": {
     "/health": {
@@ -41,10 +35,7 @@
             "description": "Service is healthy",
             "content": {
               "text/plain": {
-                "schema": {
-                  "type": "string",
-                  "example": "ok"
-                }
+                "schema": { "type": "string", "example": "ok" }
               }
             }
           }
@@ -62,9 +53,7 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AnalyzeRequest"
-              }
+              "schema": { "$ref": "#/components/schemas/AnalyzeRequest" }
             }
           }
         },
@@ -73,25 +62,11 @@
             "description": "List of detected PII entities",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/RecognizerResult"
-                  }
-                }
+                "schema": { "$ref": "#/components/schemas/AnalyzeResponse" }
               }
             }
           },
-          "400": {
-            "description": "Bad request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
+          "400": { "description": "Bad request" }
         }
       }
     },
@@ -107,10 +82,7 @@
             "in": "query",
             "description": "Filter recognizers by language code (e.g. en)",
             "required": false,
-            "schema": {
-              "type": "string",
-              "example": "en"
-            }
+            "schema": { "type": "string", "example": "en" }
           }
         ],
         "responses": {
@@ -118,12 +90,7 @@
             "description": "List of recognizers",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/RecognizerInfo"
-                  }
-                }
+                "schema": { "$ref": "#/components/schemas/RecognizerInfoList" }
               }
             }
           }
@@ -142,10 +109,7 @@
             "in": "query",
             "description": "Filter by language code (e.g. en)",
             "required": false,
-            "schema": {
-              "type": "string",
-              "example": "en"
-            }
+            "schema": { "type": "string", "example": "en" }
           }
         ],
         "responses": {
@@ -153,13 +117,7 @@
             "description": "List of supported entity type names",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "example": ["PERSON", "EMAIL_ADDRESS", "PHONE_NUMBER", "US_SSN", "CREDIT_CARD", "IBAN_CODE", "IP_ADDRESS", "LOCATION", "DATE_TIME", "US_DRIVER_LICENSE", "US_PASSPORT", "CRYPTO"]
-                }
+                "schema": { "$ref": "#/components/schemas/SupportedEntitiesList" }
               }
             }
           }
@@ -186,9 +144,7 @@
           "entities": {
             "type": "array",
             "description": "Restrict analysis to these entity types only. If omitted, all supported entity types are checked.",
-            "items": {
-              "type": "string"
-            },
+            "items": { "type": "string" },
             "example": ["PERSON", "EMAIL_ADDRESS"]
           },
           "score_threshold": {
@@ -205,11 +161,14 @@
           "allow_list": {
             "type": "array",
             "description": "List of strings to exclude from detection.",
-            "items": {
-              "type": "string"
-            }
+            "items": { "type": "string" }
           }
         }
+      },
+      "AnalyzeResponse": {
+        "type": "array",
+        "description": "List of detected PII entities.",
+        "items": { "$ref": "#/components/schemas/RecognizerResult" }
       },
       "RecognizerResult": {
         "type": "object",
@@ -237,37 +196,32 @@
           }
         }
       },
+      "RecognizerInfoList": {
+        "type": "array",
+        "description": "List of recognizers.",
+        "items": { "$ref": "#/components/schemas/RecognizerInfo" }
+      },
       "RecognizerInfo": {
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "example": "SpacyRecognizer"
-          },
+          "name": { "type": "string", "example": "SpacyRecognizer" },
           "supported_entities": {
             "type": "array",
-            "items": {
-              "type": "string"
-            },
+            "items": { "type": "string" },
             "example": ["PERSON", "LOCATION"]
           },
           "supported_languages": {
             "type": "array",
-            "items": {
-              "type": "string"
-            },
+            "items": { "type": "string" },
             "example": ["en"]
           }
         }
       },
-      "Error": {
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "string",
-            "example": "Invalid request: 'language' is required"
-          }
-        }
+      "SupportedEntitiesList": {
+        "type": "array",
+        "description": "List of supported PII entity type names.",
+        "items": { "type": "string" },
+        "example": ["PERSON", "EMAIL_ADDRESS", "PHONE_NUMBER", "US_SSN", "CREDIT_CARD", "IBAN_CODE", "IP_ADDRESS", "LOCATION", "DATE_TIME", "US_DRIVER_LICENSE", "US_PASSPORT", "CRYPTO"]
       }
     }
   }
