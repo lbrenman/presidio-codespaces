@@ -1,0 +1,39 @@
+{
+  "name": "Presidio PII Detection",
+
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+
+  "forwardPorts": [5001, 5002],
+  "portsAttributes": {
+    "5002": {
+      "label": "Presidio Analyzer API",
+      "onAutoForward": "notify"
+    },
+    "5001": {
+      "label": "Presidio Anonymizer API",
+      "onAutoForward": "notify"
+    }
+  },
+
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+
+  "postStartCommand": "bash .devcontainer/post-start.sh",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "humao.rest-client"
+      ],
+      "settings": {
+        "rest-client.environmentVariables": {
+          "$shared": {
+            "analyzerUrl": "http://localhost:5002",
+            "anonymizerUrl": "http://localhost:5001"
+          }
+        }
+      }
+    }
+  }
+}

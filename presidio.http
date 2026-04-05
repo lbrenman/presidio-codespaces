@@ -1,0 +1,122 @@
+### Presidio API Test Requests
+### Use with the VS Code REST Client extension (humao.rest-client)
+
+@analyzerUrl  = http://localhost:5002
+@anonymizerUrl = http://localhost:5001
+
+### ─── Analyzer ────────────────────────────────────────────
+
+### Health check - Analyzer
+GET {{analyzerUrl}}/health
+
+###
+
+### Analyze text for PII entities
+POST {{analyzerUrl}}/analyze
+Content-Type: application/json
+
+{
+  "text": "Hi, I'm John Smith. My email is john.smith@example.com and my phone is 212-555-0199. My SSN is 078-05-1120.",
+  "language": "en"
+}
+
+###
+
+### Analyze with specific entity types only
+POST {{analyzerUrl}}/analyze
+Content-Type: application/json
+
+{
+  "text": "Send the invoice to jane.doe@company.org or call 415-867-5309.",
+  "language": "en",
+  "entities": ["EMAIL_ADDRESS", "PHONE_NUMBER"]
+}
+
+###
+
+### Analyze with score threshold
+POST {{analyzerUrl}}/analyze
+Content-Type: application/json
+
+{
+  "text": "My credit card number is 4111 1111 1111 1111, expiry 12/26.",
+  "language": "en",
+  "score_threshold": 0.5
+}
+
+###
+
+### List all supported recognizers
+GET {{analyzerUrl}}/recognizers?language=en
+
+###
+
+### List all supported entity types
+GET {{analyzerUrl}}/supportedentities?language=en
+
+
+### ─── Anonymizer ───────────────────────────────────────────
+
+### Health check - Anonymizer
+GET {{anonymizerUrl}}/health
+
+###
+
+### Anonymize (redact) PII - replace with entity type label
+POST {{anonymizerUrl}}/anonymize
+Content-Type: application/json
+
+{
+  "text": "Hi, I'm John Smith. My email is john.smith@example.com and my phone is 212-555-0199.",
+  "anonymizers": {
+    "DEFAULT": { "type": "replace" }
+  },
+  "analyzer_results": [
+    { "start": 8,  "end": 18, "score": 0.85, "entity_type": "PERSON" },
+    { "start": 32, "end": 54, "score": 1.0,  "entity_type": "EMAIL_ADDRESS" },
+    { "start": 70, "end": 82, "score": 0.75, "entity_type": "PHONE_NUMBER" }
+  ]
+}
+
+###
+
+### Anonymize with MASK operator
+POST {{anonymizerUrl}}/anonymize
+Content-Type: application/json
+
+{
+  "text": "John's SSN is 078-05-1120.",
+  "anonymizers": {
+    "DEFAULT": {
+      "type": "mask",
+      "masking_char": "*",
+      "chars_to_mask": 4,
+      "from_end": true
+    }
+  },
+  "analyzer_results": [
+    { "start": 0,  "end": 4,  "score": 0.85, "entity_type": "PERSON" },
+    { "start": 14, "end": 25, "score": 0.85, "entity_type": "US_SSN" }
+  ]
+}
+
+###
+
+### Anonymize with HASH operator
+POST {{anonymizerUrl}}/anonymize
+Content-Type: application/json
+
+{
+  "text": "Contact jane.doe@company.org for details.",
+  "anonymizers": {
+    "EMAIL_ADDRESS": { "type": "hash", "hash_type": "sha256" }
+  },
+  "analyzer_results": [
+    { "start": 8, "end": 27, "score": 1.0, "entity_type": "EMAIL_ADDRESS" }
+  ]
+}
+
+###
+
+### List supported anonymizers
+GET {{anonymizerUrl}}/anonymizers
