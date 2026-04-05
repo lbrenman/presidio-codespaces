@@ -1,16 +1,16 @@
 {
-  "openapi": "3.0.4",
+  "openapi": "3.0.0",
   "info": {
+    "version": "2.x",
     "title": "Presidio Image Redactor API",
     "description": "Detects and redacts PII text entities in images using OCR and the Presidio Analyzer engine. Supports standard image formats (PNG, JPEG, BMP, TIFF) and DICOM medical images. Part of the Microsoft Presidio framework.",
-    "version": "2.x",
-    "license": {
-      "name": "MIT",
-      "url": "https://opensource.org/licenses/MIT"
-    },
     "contact": {
       "name": "Microsoft Presidio",
       "url": "https://github.com/microsoft/presidio"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
     }
   },
   "servers": [
@@ -20,10 +20,7 @@
     }
   ],
   "tags": [
-    {
-      "name": "Redaction",
-      "description": "Redact PII from images"
-    }
+    { "name": "Redaction", "description": "Redact PII from images" }
   ],
   "paths": {
     "/health": {
@@ -34,13 +31,10 @@
         "operationId": "getHealth",
         "responses": {
           "200": {
-            "description": "Service is healthy",
+            "description": "OK",
             "content": {
               "text/plain": {
-                "schema": {
-                  "type": "string",
-                  "example": "ok"
-                }
+                "schema": { "type": "string", "example": "ok" }
               }
             }
           }
@@ -57,60 +51,35 @@
           "required": true,
           "content": {
             "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "required": ["image"],
-                "properties": {
-                  "image": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "The image file to redact. Supported: PNG, JPEG, BMP, TIFF."
-                  },
-                  "data": {
-                    "type": "string",
-                    "description": "JSON string of redaction options: color_fill (int or RGB array), score_threshold (float), entities (string array), allow_list (string array).",
-                    "example": "{\"color_fill\": 0}"
-                  }
-                }
-              }
+              "schema": { "$ref": "#/components/schemas/RedactImageRequest" }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "The redacted image binary.",
+            "description": "OK - the redacted image binary",
             "content": {
               "image/png": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
+                "schema": { "type": "string", "format": "binary" }
               },
               "image/jpeg": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
+                "schema": { "type": "string", "format": "binary" }
               }
             }
           },
           "400": {
-            "description": "Bad request",
+            "description": "Bad Request",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
           },
           "500": {
-            "description": "Internal server error",
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
           }
@@ -127,54 +96,32 @@
           "required": true,
           "content": {
             "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "required": ["file"],
-                "properties": {
-                  "file": {
-                    "type": "string",
-                    "format": "binary",
-                    "description": "The DICOM (.dcm) file to redact."
-                  },
-                  "data": {
-                    "type": "string",
-                    "description": "JSON string of DICOM redaction options: fill (contrast or background), padding_width (int), score_threshold (float), entities (string array), allow_list (string array).",
-                    "example": "{\"fill\": \"contrast\", \"padding_width\": 25}"
-                  }
-                }
-              }
+              "schema": { "$ref": "#/components/schemas/RedactDicomRequest" }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "The redacted DICOM file.",
+            "description": "OK - the redacted DICOM file",
             "content": {
               "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
+                "schema": { "type": "string", "format": "binary" }
               }
             }
           },
           "400": {
-            "description": "Bad request",
+            "description": "Bad Request",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
           },
           "500": {
-            "description": "Internal server error",
+            "description": "Internal Server Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
           }
@@ -184,8 +131,43 @@
   },
   "components": {
     "schemas": {
-      "Error": {
+      "RedactImageRequest": {
         "type": "object",
+        "title": "RedactImageRequest",
+        "required": ["image"],
+        "properties": {
+          "image": {
+            "type": "string",
+            "format": "binary",
+            "description": "The image file to redact. Supported: PNG, JPEG, BMP, TIFF."
+          },
+          "data": {
+            "type": "string",
+            "description": "JSON string of redaction options: color_fill (int or RGB array), score_threshold (float), entities (string array), allow_list (string array).",
+            "example": "{\"color_fill\": 0}"
+          }
+        }
+      },
+      "RedactDicomRequest": {
+        "type": "object",
+        "title": "RedactDicomRequest",
+        "required": ["file"],
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "description": "The DICOM (.dcm) file to redact."
+          },
+          "data": {
+            "type": "string",
+            "description": "JSON string of DICOM redaction options: fill (contrast or background), padding_width (int), score_threshold (float), entities (string array), allow_list (string array).",
+            "example": "{\"fill\": \"contrast\", \"padding_width\": 25}"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "title": "ErrorResponse",
         "properties": {
           "error": {
             "type": "string",

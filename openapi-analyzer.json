@@ -1,16 +1,16 @@
 {
-  "openapi": "3.0.4",
+  "openapi": "3.0.0",
   "info": {
+    "version": "2.x",
     "title": "Presidio Analyzer API",
     "description": "Detects PII entities in text using Named Entity Recognition, regular expressions, rule-based logic, and checksums. Part of the Microsoft Presidio framework.",
-    "version": "2.x",
-    "license": {
-      "name": "MIT",
-      "url": "https://opensource.org/licenses/MIT"
-    },
     "contact": {
       "name": "Microsoft Presidio",
       "url": "https://github.com/microsoft/presidio"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
     }
   },
   "servers": [
@@ -32,7 +32,7 @@
         "operationId": "getHealth",
         "responses": {
           "200": {
-            "description": "Service is healthy",
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": { "type": "string", "example": "ok" }
@@ -59,14 +59,21 @@
         },
         "responses": {
           "200": {
-            "description": "List of detected PII entities",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": { "$ref": "#/components/schemas/AnalyzeResponse" }
               }
             }
           },
-          "400": { "description": "Bad request" }
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
         }
       }
     },
@@ -87,10 +94,10 @@
         ],
         "responses": {
           "200": {
-            "description": "List of recognizers",
+            "description": "OK",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/RecognizerInfoList" }
+                "schema": { "$ref": "#/components/schemas/RecognizersResponse" }
               }
             }
           }
@@ -114,10 +121,10 @@
         ],
         "responses": {
           "200": {
-            "description": "List of supported entity type names",
+            "description": "OK",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/SupportedEntitiesList" }
+                "schema": { "$ref": "#/components/schemas/SupportedEntitiesResponse" }
               }
             }
           }
@@ -129,6 +136,7 @@
     "schemas": {
       "AnalyzeRequest": {
         "type": "object",
+        "title": "AnalyzeRequest",
         "required": ["text", "language"],
         "properties": {
           "text": {
@@ -166,12 +174,19 @@
         }
       },
       "AnalyzeResponse": {
-        "type": "array",
-        "description": "List of detected PII entities.",
-        "items": { "$ref": "#/components/schemas/RecognizerResult" }
+        "type": "object",
+        "title": "AnalyzeResponse",
+        "properties": {
+          "results": {
+            "type": "array",
+            "description": "List of detected PII entities.",
+            "items": { "$ref": "#/components/schemas/RecognizerResult" }
+          }
+        }
       },
       "RecognizerResult": {
         "type": "object",
+        "title": "RecognizerResult",
         "properties": {
           "entity_type": {
             "type": "string",
@@ -196,13 +211,20 @@
           }
         }
       },
-      "RecognizerInfoList": {
-        "type": "array",
-        "description": "List of recognizers.",
-        "items": { "$ref": "#/components/schemas/RecognizerInfo" }
+      "RecognizersResponse": {
+        "type": "object",
+        "title": "RecognizersResponse",
+        "properties": {
+          "recognizers": {
+            "type": "array",
+            "description": "List of loaded recognizers.",
+            "items": { "$ref": "#/components/schemas/RecognizerInfo" }
+          }
+        }
       },
       "RecognizerInfo": {
         "type": "object",
+        "title": "RecognizerInfo",
         "properties": {
           "name": { "type": "string", "example": "SpacyRecognizer" },
           "supported_entities": {
@@ -217,11 +239,27 @@
           }
         }
       },
-      "SupportedEntitiesList": {
-        "type": "array",
-        "description": "List of supported PII entity type names.",
-        "items": { "type": "string" },
-        "example": ["PERSON", "EMAIL_ADDRESS", "PHONE_NUMBER", "US_SSN", "CREDIT_CARD", "IBAN_CODE", "IP_ADDRESS", "LOCATION", "DATE_TIME", "US_DRIVER_LICENSE", "US_PASSPORT", "CRYPTO"]
+      "SupportedEntitiesResponse": {
+        "type": "object",
+        "title": "SupportedEntitiesResponse",
+        "properties": {
+          "entities": {
+            "type": "array",
+            "description": "List of supported PII entity type names.",
+            "items": { "type": "string" },
+            "example": ["PERSON", "EMAIL_ADDRESS", "PHONE_NUMBER", "US_SSN", "CREDIT_CARD", "IBAN_CODE", "IP_ADDRESS", "LOCATION", "DATE_TIME", "US_DRIVER_LICENSE", "US_PASSPORT", "CRYPTO"]
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "title": "ErrorResponse",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "Invalid request: 'language' is required"
+          }
+        }
       }
     }
   }
