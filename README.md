@@ -17,7 +17,6 @@ Three separate specs are included in this repo — one per service:
 > The upstream combined spec (text services only) is also available via [Microsoft's ReDoc UI](https://microsoft.github.io/presidio/api-docs/api-docs.html).
 
 ---
----
 
 ## What is Presidio?
 
